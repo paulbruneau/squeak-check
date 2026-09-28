@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Squeak Check! — Midway sound board tester</title>
+<meta name="description" content="Squeak Check is an open bench tester for Midway Cheap Squeak Deluxe, Sounds Good and Turbo Cheap Squeak arcade sound boards. Gerbers, BOM, pinouts and how the boards work in Spy Hunter and Xenophobe.">
+<meta property="og:title" content="Squeak Check! — Midway sound board tester">
+<meta property="og:description" content="Power up a Cheap Squeak Deluxe or Sounds Good on the bench and make it play any sound. Open hardware by Ethical Paul.">
+<meta property="og:image" content="images/board-top.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Bungee&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111214; --panel: #1a1c20; --panel-2: #22252b; --line: #33373f;
+  --text: #ecebe6; --muted: #a9adb5; --accent: #f2b33d; --accent-2: #5ec8e5; --link: #7fd3ef;
+  --cds-text-primary: var(--text); --cds-text-secondary: var(--muted);
+  --cds-chart-axis: #7c828d; --cds-chart-grid: #4a4f58;
+  --cds-chart-categorical-1: var(--accent-2); --cds-chart-reference-tint: #1f2227;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f4ee; --panel: #ffffff; --panel-2: #f0ede4; --line: #d9d5c8;
+    --text: #1d1d1b; --muted: #5d5f63; --accent: #b36b00; --accent-2: #1f7fa3; --link: #1f6f8f;
+    --cds-chart-axis: #8a8e95; --cds-chart-grid: #c9c6bc; --cds-chart-reference-tint: #f3f1ea;
+    color-scheme: light;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 "Barlow", system-ui, sans-serif; }
+a { color: var(--link); text-underline-offset: 2px; }
+a:hover { color: var(--accent); }
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+header.hero { padding: 56px 0 28px; border-bottom: 1px solid var(--line); background:
+  radial-gradient(ellipse at 20% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%), var(--bg); }
+.kicker { font: 11px/1.6 "Press Start 2P", monospace; color: var(--accent); letter-spacing: .04em; margin: 0 0 14px; }
+h1 { font: 400 clamp(40px, 8vw, 72px)/1 "Bungee", sans-serif; margin: 0; letter-spacing: .01em; }
+.sub { font: 600 20px/1.35 "Barlow Condensed", sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 14px 0 4px; }
+.by { font-size: 18px; margin: 0 0 22px; }
+.lead { font-size: 20px; max-width: 46em; }
+.buttons { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 8px; }
+.btn { display: inline-block; padding: 10px 16px; border-radius: 8px; font: 600 16px/1.2 "Barlow Condensed", sans-serif; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--line); color: var(--text); background: var(--panel); }
+.btn.primary { background: var(--accent); color: #1b1300; border-color: var(--accent); }
+.btn:hover { border-color: var(--accent); color: var(--text); }
+.btn.primary:hover { color: #1b1300; filter: brightness(1.08); }
+figure { margin: 26px 0; }
+figure img, figure svg { width: 100%; height: auto; display: block; border-radius: 10px; }
+figure.board img { background: transparent; }
+figure.diagram { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; }
+nav.toc { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+nav.toc ul { list-style: none; margin: 0 auto; padding: 10px 20px; display: flex; gap: 18px; overflow-x: auto; max-width: 900px; white-space: nowrap; scrollbar-width: none; }
+nav.toc a { font: 600 15px/1 "Barlow Condensed", sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+nav.toc a:hover { color: var(--accent); }
+section { padding: 40px 0 8px; border-bottom: 1px solid var(--line); }
+section:last-of-type { border-bottom: 0; }
+h2 { font: 400 30px/1.15 "Bungee", sans-serif; margin: 0 0 14px; scroll-margin-top: 60px; }
+h3 { font: 700 23px/1.25 "Barlow Condensed", sans-serif; letter-spacing: .02em; margin: 30px 0 8px; }
+p { margin: 0 0 14px; }
+ul, ol { padding-left: 1.3em; margin: 0 0 16px; }
+li { margin: 4px 0; }
+b, strong { font-weight: 600; }
+.table-wrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; background: var(--panel); }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font: 600 14px/1.3 "Barlow Condensed", sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); background: var(--panel-2); }
+tr:last-child td { border-bottom: 0; }
+td.mono, code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13.5px; }
+td.nowrap { white-space: nowrap; }
+tr.group td { background: var(--panel-2); font: 600 13px/1.3 "Barlow Condensed", sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.note { color: var(--muted); font-size: 15px; }
+.callout { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px; padding: 12px 16px; margin: 18px 0; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 640px) { .two { grid-template-columns: 1fr; } body { font-size: 16px; } .lead { font-size: 18px; } }
+.dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 18px 0; }
+.dl a { display: block; padding: 14px 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--text); }
+.dl a:hover { border-color: var(--accent); }
+.dl b { display: block; font: 700 18px/1.2 "Barlow Condensed", sans-serif; letter-spacing: .03em; }
+.dl span { color: var(--muted); font-size: 14px; }
+footer { padding: 30px 0 50px; color: var(--muted); font-size: 14px; }
+footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">REV E.4 · OPEN HARDWARE</p>
+    <h1>SQUEAK CHECK!</h1>
+    <p class="sub">Cheap Squeak Deluxe · Sounds Good · Bench tester</p>
+    <p class="by">By Ethical Paul</p>
+    <p class="lead">Squeak Check lets you power up a Midway Cheap Squeak Deluxe or Sounds Good arcade sound board on the bench and make it play any sound, without the game's CPU board, harness or cabinet.</p>
+    <div class="buttons">
+      <a class="btn primary" href="fab/SqueakCheck_RevE4_Gerbers.zip" download>Download Gerbers</a>
+      <a class="btn" href="#build">Parts list</a>
+      <a class="btn" href="#pinout">Pinout</a>
+    </div>
+    <figure class="board">
+      <img src="images/board-top.png" width="2352" height="1920" alt="Squeak Check Rev E.4, top side: hex dial, PLAY and RESET buttons, volume pot, RCA jacks and three rows of harness solder holes">
+      <figcaption>Rev E.4, top side, rendered from the fab files. 98 × 80 mm.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <ul>
+    <li><a href="#what">What it is</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#history">History</a></li>
+    <li><a href="#games">Spy Hunter &amp; Xenophobe</a></li>
+    <li><a href="#pinout">Pinout</a></li>
+    <li><a href="#hookup">Hooking up</a></li>
+    <li><a href="#using">Using it</a></li>
+    <li><a href="#build">Build it</a></li>
+    <li><a href="#compat">Compatibility</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+
+<section id="what">
+  <h2>What it is</h2>
+  <p>Squeak Check stands in for the game. It supplies +5 V and +12 V, drives the four sound-select lines and the strobe the game's CPU board would drive, holds or releases RESET, gives the board its volume pot, and brings the audio out to two RCA jacks for an amp.</p>
+  <ul>
+    <li><b>Size:</b> 98 × 80 mm, 2 layers, all through-hole, about $20 in parts. The biggest single part is the $7 hex dial.</li>
+    <li><b>Controls:</b> a 16-position hex dial (sound 0–F), a PLAY button, a RESET button and an on-board 1k volume pot.</li>
+    <li><b>Power in:</b> a 4-pin KK-396 header (+5 V, GND, GND, +12 V) from any bench supply.</li>
+    <li><b>Out to the sound board:</b> three wire harnesses, J1, J2 and J3, soldered into the tester. Their other ends carry the plugs that go on the sound board.</li>
+    <li><b>Audio out:</b> line level on both RCA jacks. Feed it to an amp or powered speaker, not a bare speaker.</li>
+  </ul>
+  <p>Each harness wire passes through two holes. It goes up through a bare hole with its insulation on, then the stripped end solders into the plated hole next to it. The wire is held by its jacket, so bending it doesn't stress the solder joint.</p>
+  <figure class="board">
+    <img src="images/board-bottom.png" width="2352" height="1920" loading="lazy" alt="Squeak Check bottom side: ground pour and a few back-side traces">
+    <figcaption>Bottom side: the ground pour and the few back-side traces.</figcaption>
+  </figure>
+</section>
+
+<section id="how">
+  <h2>How the sound board works in a game</h2>
+  <p>On these games the main CPU makes no sound itself. It puts a 4-bit number on J1 and pulses a strobe line, and the sound board's own 68000 plays whatever that number means in its ROMs.</p>
+  <figure class="diagram">
+    <svg xmlns="http://www.w3.org/2000/svg" font-family="inherit" viewBox="0 0 760 584" role="img" aria-label="The game sends a 4-bit number; the sound board does the rest" font-size="13"><defs><marker id="sf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--cds-chart-axis)"/></marker></defs><text x="24" y="30" font-size="15" font-weight="600" fill="var(--cds-text-primary)">The game sends a 4-bit number; the sound board does the rest</text><text x="24" y="52" font-size="11.5" fill="var(--cds-chart-categorical-1)">Coloured lines: what Squeak Check stands in for on the bench</text><g><rect x="248" y="76" width="264" height="488" rx="8" fill="var(--cds-chart-reference-tint)" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="380" y="98" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">Sound board</text><text x="380" y="114" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">Cheap Squeak Deluxe or Sounds Good</text></g><g fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"><path d="M380 188V204" marker-end="url(#sf-arrow)"/><path d="M380 260V276" marker-end="url(#sf-arrow)"/><path d="M380 332V348" marker-end="url(#sf-arrow)"/><path d="M380 404V420" marker-end="url(#sf-arrow)"/><path d="M380 476V492" marker-end="url(#sf-arrow)"/></g><g><rect x="264" y="132" width="232" height="56" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="380" y="156" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">6821 PIA</text><text x="380" y="174" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">latches nibble, interrupts CPU</text></g><g><rect x="264" y="204" width="232" height="56" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="380" y="228" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">68000 CPU + sound ROMs</text><text x="380" y="246" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">plays the samples and music</text></g><g><rect x="264" y="276" width="232" height="56" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="380" y="300" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">AD7533 10-bit DAC</text><text x="380" y="318" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">8 bits from PIA port A, 2 from B</text></g><g><rect x="264" y="348" width="232" height="56" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="380" y="372" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">LM359 low-pass filters</text><text x="380" y="390" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">smooth the DAC steps</text></g><g><rect x="264" y="420" width="232" height="56" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="380" y="444" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">MC3340 attenuator</text><text x="380" y="462" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">pot voltage sets the volume</text></g><g><rect x="264" y="492" width="232" height="56" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="380" y="516" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">LM359 output stage</text><text x="380" y="534" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">line-level audio out</text></g><g><rect x="24" y="116" width="200" height="88" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="124" y="140" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">Game CPU board</text><text x="124" y="156" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">4 data bits + SIRQ strobe</text><text x="124" y="172" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">reads STAT0 / STAT1 back</text><text x="124" y="190" text-anchor="middle" font-size="11.5" fill="var(--cds-chart-categorical-1)">Squeak Check: dial + PLAY</text></g><g><rect x="24" y="300" width="200" height="72" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="124" y="324" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">Power supply</text><text x="124" y="340" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">+5 V, +12 V and RESET</text><text x="124" y="358" text-anchor="middle" font-size="11.5" fill="var(--cds-chart-categorical-1)">Squeak Check: PWR1 + RESET</text></g><g><rect x="536" y="420" width="200" height="56" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="636" y="444" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">Cabinet volume pot</text><text x="636" y="462" text-anchor="middle" font-size="11.5" fill="var(--cds-chart-categorical-1)">Squeak Check: RV1</text></g><g><rect x="536" y="492" width="200" height="56" rx="8" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><text x="636" y="516" text-anchor="middle" font-weight="600" fill="var(--cds-text-primary)">Power amp + speakers</text><text x="636" y="534" text-anchor="middle" font-size="11.5" fill="var(--cds-chart-categorical-1)">Squeak Check: RCA jacks</text></g><g fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"><path d="M224 160H264" marker-end="url(#sf-arrow)"/><path d="M224 336H248" marker-end="url(#sf-arrow)"/><path d="M536 448H496" marker-end="url(#sf-arrow)"/><path d="M496 520H536" marker-end="url(#sf-arrow)"/></g><text x="244" y="152" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--cds-text-primary)">J1</text><text x="236" y="328" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--cds-text-primary)">J2</text><text x="516" y="440" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--cds-text-primary)">J3</text><text x="516" y="512" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--cds-text-primary)">J3</text></svg>
+    <figcaption>Signal path through a Cheap Squeak Deluxe / Sounds Good board.</figcaption>
+  </figure>
+  <p>The chain is the same on the Cheap Squeak Deluxe and the Sounds Good; MAME's source notes the two boards are almost identical.</p>
+  <ul>
+    <li><b>Command in:</b> the four bits land on the 6821 PIA's port B. The strobe (SIRQ) hits the PIA's CA1 input, which interrupts the 68000 so it reads the nibble.</li>
+    <li><b>Status out:</b> two PIA outputs come back to the game as STAT0 and STAT1 on J1, so the game can tell what the sound board is doing.</li>
+    <li><b>Sound out:</b> the 68000 writes 10-bit samples to an AD7533 DAC, split 8 bits on PIA port A and 2 on port B. Three LM359 low-pass stages smooth it, and an MC3340 attenuator sets the volume from the cabinet pot's wiper voltage.</li>
+    <li><b>Reset:</b> J2's RESET pins are active-low. Pulling them to ground holds the 68000 in reset; the game can use this to restart the sound board.</li>
+  </ul>
+</section>
+
+<section id="history">
+  <h2>A short history of Midway's sound boards</h2>
+  <p>Midway's early MCR video games (1981–84) put sound on a board that also handled the game's inputs and outputs, hence the names Sound I/O and Super Sound I/O (SSIO). Each had a Z80 driving two AY-3-8910 tone chips, and they carried Kick, Solar Fox, Tron, Journey and Tapper. For speech, Midway borrowed Bally's pinball Squawk &amp; Talk board (6802 CPU plus a TMS5200 speech chip) for Discs of Tron and NFL Football.</p>
+  <p>From 1983 the sound boards got their own microprocessors and DACs and were built to take 4-bit commands from the game. The pinball Cheap Squeak (a 6803, simple tones, no speech) was the budget board. Its 68000-based video-game cousin, the Cheap Squeak Deluxe, went into Spy Hunter. The 6809 Turbo Cheap Squeak and the 68000 Sounds Good followed, and the Sounds Good built on the CSD's design and carried most of Midway's late MCR and MCR-68k games. After WMS bought Midway in 1988, games like Arch Rivals and Pigskin 621AD moved to Williams sound boards instead.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Board</th><th>Years</th><th>CPU</th><th>Representative games</th></tr></thead>
+    <tbody>
+      <tr><td>Sound I/O</td><td class="nowrap">1981</td><td>Z80 + 2× AY-3-8910</td><td>Kick, Solar Fox</td></tr>
+      <tr><td>Super Sound I/O (SSIO)</td><td class="nowrap">1981–84</td><td>Z80 + 2× AY-3-8910</td><td>Satan's Hollow, Tron, Journey, Tapper, Spy Hunter (effects)</td></tr>
+      <tr><td>Squawk &amp; Talk</td><td class="nowrap">1981–85</td><td>6802/6808 + TMS5200 speech</td><td>Pinball: Flash Gordon, Eight Ball Deluxe, Mr. &amp; Mrs. Pac-Man. Video: Discs of Tron, NFL Football</td></tr>
+      <tr><td>Cheap Squeak (pinball)</td><td class="nowrap">1984–86</td><td>6803</td><td>X's &amp; O's, Kings of Steel, Black Pyramid, Spy Hunter pinball, Lady Luck</td></tr>
+      <tr><td>Cheap Squeak Deluxe</td><td class="nowrap">1983–85</td><td>68000</td><td>Spy Hunter (music), Turbo Tag (prototype)</td></tr>
+      <tr><td>Turbo Cheap Squeak</td><td class="nowrap">1984–87</td><td>6809</td><td>Video: Demolition Derby, Sarge, Max RPM, Spy Hunter II. Pinball: Black Belt, Strange Science, City Slicker</td></tr>
+      <tr><td>Sounds Deluxe (pinball)</td><td class="nowrap">1986–87</td><td>68000</td><td>Motordome, Special Force, Heavy Metal Meltdown, Dungeons &amp; Dragons</td></tr>
+      <tr><td>Sounds Good</td><td class="nowrap">1986–88</td><td>68000</td><td>Rampage, Power Drive, Star Guards, Xenophobe, Spy Hunter II, Blasted</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Years are the release years of the games listed in MAME and PinWiki, not official production dates.</p>
+</section>
+
+<section id="games">
+  <h2>Spy Hunter &amp; Xenophobe</h2>
+  <h3>Spy Hunter (1983): an add-on to the Super Sound I/O</h3>
+  <p>Spy Hunter runs on Midway's MCR-III system: a Z80 CPU board, a video board, and a Super Sound I/O board with a Z80 and two AY-3-8910 sound chips (the sit-down cabinet uses a Sound I/O variant with stereo panning). The SSIO makes all the game-play sounds: everything except the music.</p>
+  <p>The Cheap Squeak Deluxe (A080-91671) was added for one job: playing the Peter Gunn theme. Owners with a dead CSD report a game that plays normally with every effect but no music, and pressing the red TEST button on a working CSD plays the music on its own. The music has its own amplifier channel in the cabinet. The CSD has its own 68000, 32 KB of sound ROM (U7, U8, U17, U18) and a 16 MHz oscillator.</p>
+  <p>The main Z80 talks to it through output port 4. In MAME's driver, bits 0–3 of that port are the CSD's sound number and bit 4 is SIRQ. The same port also drives the lamp driver board and the analog-input mux, so the CSD shares its wires with other hardware. The CSD's two status bits come back on input port 1.</p>
+  <h3>Xenophobe (1987): the only sound board in the game</h3>
+  <p>Xenophobe runs on the MCR-68k system, whose main CPU is itself a 68000. There is no SSIO and no second sound board: the Sounds Good makes every sound in the game. MAME's Xenophobe driver has the Sounds Good as its only sound device, and owners with a failed Sounds Good report a completely silent game.</p>
+  <p>The Sounds Good is built on the same A080-91671 bare board as the Cheap Squeak Deluxe, with a larger memory map: up to 256 KB of sound ROM, which Xenophobe fills. The main 68000 writes a control word where bits 0–3 are the sound number and bit 4 is the strobe, the same four-bits-plus-strobe interface Spy Hunter uses.</p>
+  <div class="callout">One wiring difference matters on the bench. The CSD runs SIRQ through a 40106 inverter before the PIA and the Sounds Good does not, but both boards idle SIRQ high and both games fire it by pulling it low. So one tester, with PLAY pulling SIRQ to ground, works for both.</div>
+</section>
+
+<section id="pinout">
+  <h2>The interface: J1, J2 and J3</h2>
+  <p>The three harnesses on Squeak Check carry every pin of the sound board's J1, J2 and J3 in the same order and under the same names, including duplicates and unused pins, so each wire lands where the original harness had it.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Conn.</th><th>Pin</th><th>Name</th><th>What Squeak Check does with it</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="4">J1 · commands · 0.100 in · 22 AWG</td></tr>
+      <tr><td>J1</td><td>1</td><td class="mono">SPARE</td><td>Not connected</td></tr>
+      <tr><td>J1</td><td>2</td><td class="mono">SIRQ</td><td>1k series; 10k pull-up to +5 V; PLAY pulls it low, 1 µF debounce</td></tr>
+      <tr><td>J1</td><td class="nowrap">3, 4, 8, 9</td><td class="mono">SOUND1, SOUND0, SOUND3, SOUND2</td><td>1k series, 10k pull-down; the hex dial pulls each bit to +5 V</td></tr>
+      <tr><td>J1</td><td>5, 6</td><td class="mono">STAT1, STAT0</td><td>Wire terminals only (outputs from the sound board)</td></tr>
+      <tr><td>J1</td><td>7</td><td class="mono">KEY</td><td>Keyed position, no wire</td></tr>
+      <tr class="group"><td colspan="4">J2 · power and reset · 0.156 in · 18 AWG</td></tr>
+      <tr><td>J2</td><td class="nowrap">1, 2 / 11, 12</td><td class="mono">AGND / LGND</td><td>Ground</td></tr>
+      <tr><td>J2</td><td>3, 4</td><td class="mono">+5V</td><td>From PWR1</td></tr>
+      <tr><td>J2</td><td>5, 6</td><td class="mono">+12V</td><td>From PWR1</td></tr>
+      <tr><td>J2</td><td>7</td><td class="mono">E-GND</td><td>Tied to ground</td></tr>
+      <tr><td>J2</td><td>8</td><td class="mono">KEY</td><td>Keyed position, no wire</td></tr>
+      <tr><td>J2</td><td>9, 10</td><td class="mono">RESET</td><td>10k pull-up to +5 V; the RESET button pulls it low</td></tr>
+      <tr class="group"><td colspan="4">J3 · audio and volume · 0.100 in · 22 AWG</td></tr>
+      <tr><td>J3</td><td>1</td><td class="mono">VOL_WIPER</td><td>Volume pot wiper</td></tr>
+      <tr><td>J3</td><td>10, 12</td><td class="mono">VOL_END_A, VOL_END_B</td><td>Volume pot ends (J3-12 is +12 V through 2.7k on the sound board)</td></tr>
+      <tr><td>J3</td><td>2, 3</td><td class="mono">AUDIO_L, AUDIO_R</td><td>To the white and red RCA jacks</td></tr>
+      <tr><td>J3</td><td class="nowrap">4, 5, 8, 11</td><td class="mono">AGND</td><td>Ground</td></tr>
+      <tr><td>J3</td><td>6, 7</td><td class="mono">AUDIO6, AUDIO7</td><td>Wire terminals only</td></tr>
+      <tr><td>J3</td><td>9</td><td class="mono">KEY</td><td>Keyed position, no wire</td></tr>
+    </tbody>
+  </table></div>
+  <p>The volume pot is wired so clockwise is louder. The MC3340 attenuates more as its control voltage rises, so turning toward the +12 V end (J3-12) turns the sound down. A full pin-by-pin list with hole coordinates is in <a href="fab/Harness_Pin_Map.csv">Harness_Pin_Map.csv</a>.</p>
+</section>
+
+<section id="hookup">
+  <h2>Hooking up a Cheap Squeak Deluxe</h2>
+  <p>J1 and J3 sit side by side on the bottom edge of the board and J2 runs along the top edge, so the three harness plugs go on from opposite sides. The Sounds Good uses the same bare board, so the connectors are in the same places.</p>
+  <figure class="diagram">
+    <svg xmlns="http://www.w3.org/2000/svg" font-family="inherit" viewBox="0 0 760 776" role="img" aria-label="Where the harness plugs in on a Cheap Squeak Deluxe" font-size="13"><text x="24" y="30" font-size="15" font-weight="600" fill="var(--cds-text-primary)">Where the harness plugs in on a Cheap Squeak Deluxe</text><text x="24" y="50" font-size="11.5" fill="var(--cds-text-secondary)">Component side, redrawn from the A080-91671 assembly drawing in the Spy Hunter manual</text><g><rect x="24" y="72" width="300" height="572" rx="4" fill="var(--cds-chart-reference-tint)" stroke="var(--cds-chart-axis)" stroke-width="1.25"/><circle cx="34" cy="82" r="4" fill="none" stroke="var(--cds-chart-grid)" stroke-width="1"/><circle cx="314" cy="82" r="4" fill="none" stroke="var(--cds-chart-grid)" stroke-width="1"/><circle cx="34" cy="634" r="4" fill="none" stroke="var(--cds-chart-grid)" stroke-width="1"/><circle cx="314" cy="634" r="4" fill="none" stroke="var(--cds-chart-grid)" stroke-width="1"/><text x="36" y="140" font-size="11.5" fill="var(--cds-text-secondary)">A080-91671</text></g><g><rect x="108" y="94.3" width="24" height="23.5" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="75" y="282.5" width="164.7" height="37.2" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="74.1" y="377.4" width="74.7" height="22.9" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="169.8" y="377.4" width="74.7" height="22.9" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="74.1" y="415.2" width="74.7" height="21.7" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="169.8" y="415.2" width="74.7" height="21.7" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="74.1" y="461.5" width="74.7" height="22.9" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="169.8" y="461.5" width="74.7" height="22.9" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="138.6" y="534.2" width="99.9" height="22.9" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><rect x="204.9" y="590.2" width="48" height="7.5" rx="2" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"/><circle cx="52.8" cy="596" r="4" fill="none" stroke="var(--cds-chart-axis)" stroke-width="1.25"/></g><text x="157" y="305" text-anchor="middle" font-size="11.5" fill="var(--cds-text-secondary)">U5</text><text x="111.5" y="393" text-anchor="middle" font-size="10.5" fill="var(--cds-text-secondary)">U16</text><text x="207" y="393" text-anchor="middle" font-size="10.5" fill="var(--cds-text-secondary)">U6</text><text x="111.5" y="430" text-anchor="middle" font-size="10.5" fill="var(--cds-text-secondary)">U17</text><text x="207" y="430" text-anchor="middle" font-size="10.5" fill="var(--cds-text-secondary)">U7</text><text x="111.5" y="477" text-anchor="middle" font-size="10.5" fill="var(--cds-text-secondary)">U18</text><text x="207" y="477" text-anchor="middle" font-size="10.5" fill="var(--cds-text-secondary)">U8</text><text x="188.5" y="550" text-anchor="middle" font-size="10.5" fill="var(--cds-text-secondary)">U9</text><g><rect x="179.4" y="86" width="107.7" height="11.2" rx="2" fill="var(--cds-chart-categorical-1)" fill-opacity="0.25" stroke="var(--cds-chart-categorical-1)" stroke-width="2"/><rect x="107.4" y="616.5" width="54.9" height="9.2" rx="2" fill="var(--cds-chart-categorical-1)" fill-opacity="0.25" stroke="var(--cds-chart-categorical-1)" stroke-width="2"/><rect x="216.9" y="616.5" width="71.1" height="9.2" rx="2" fill="var(--cds-chart-categorical-1)" fill-opacity="0.25" stroke="var(--cds-chart-categorical-1)" stroke-width="2"/><circle cx="282" cy="91.6" r="2.5" fill="var(--cds-text-primary)"/><circle cx="112" cy="621" r="2.5" fill="var(--cds-text-primary)"/><circle cx="221.5" cy="621" r="2.5" fill="var(--cds-text-primary)"/></g><g fill="none" stroke="var(--cds-chart-axis)" stroke-width="1"><path d="M287 91.6H364"/><path d="M132 106L364 140"/><path d="M240 301H364"/><path d="M245 426H364"/><path d="M239 546H364"/><path d="M253 594L364 582"/><path d="M288 621L364 624"/><path d="M135 626V666"/><path d="M52.8 600V718"/></g><g><text x="372" y="96" font-weight="600" fill="var(--cds-text-primary)">J2 · power and reset</text><text x="372" y="112" font-size="11.5" fill="var(--cds-text-secondary)">12 pins, 0.156 in; pin 1 at the right-hand end</text></g><g><text x="372" y="144" font-weight="600" fill="var(--cds-text-primary)">SW1 · red TEST button</text><text x="372" y="160" font-size="11.5" fill="var(--cds-text-secondary)">68000 level-7 interrupt; the ROMs decide what it does</text></g><g><text x="372" y="305" font-weight="600" fill="var(--cds-text-primary)">U5 · 68000 CPU</text><text x="372" y="321" font-size="11.5" fill="var(--cds-text-secondary)">runs the sound program, 16 MHz oscillator</text></g><g><text x="372" y="430" font-weight="600" fill="var(--cds-text-primary)">U7, U8, U17, U18 · sound ROMs</text><text x="372" y="446" font-size="11.5" fill="var(--cds-text-secondary)">U6 and U16 are the 6116 RAMs</text></g><g><text x="372" y="550" font-weight="600" fill="var(--cds-text-primary)">U9 · 6821 PIA</text><text x="372" y="566" font-size="11.5" fill="var(--cds-text-secondary)">latches the 4-bit command from J1</text></g><g><text x="372" y="586" font-weight="600" fill="var(--cds-text-primary)">U10 · AD7533 DAC</text></g><g><text x="372" y="628" font-weight="600" fill="var(--cds-text-primary)">J3 · audio and volume</text><text x="372" y="644" font-size="11.5" fill="var(--cds-text-secondary)">12 pins, 0.100 in; pin 1 at the left-hand end</text></g><g><text x="110" y="684" font-weight="600" fill="var(--cds-text-primary)">J1 · commands</text><text x="110" y="700" font-size="11.5" fill="var(--cds-text-secondary)">9 pins, 0.100 in; pin 1 at the left-hand end</text></g><g><text x="24" y="736" font-weight="600" fill="var(--cds-text-primary)">LED1 · self-test LED</text><text x="24" y="752" font-size="11.5" fill="var(--cds-text-secondary)">six flashes after power-up = ROMs, RAM and PIA passed</text></g><text x="372" y="740" font-size="11.5" fill="var(--cds-text-secondary)">Dots mark pin 1. Highlighted: the three harness connectors.</text></svg>
+    <figcaption>Cheap Squeak Deluxe (A080-91671), component side: J1, J2, J3 and the parts named on this page.</figcaption>
+  </figure>
+  <p>The board has no connector housings, just rows of bare tinned square posts: 0.025 in posts on 0.100 in pitch for J1 and J3, and 0.045 in posts on 0.156 in pitch for J2. Midway's harnesses plug onto them with insulation-displacement (IDC) connectors; TE's MTA-100 and MTA-156 families fit these posts. Each plug has one keyed position so it can't go on shifted: J1 pin 7, J2 pin 8 and J3 pin 9.</p>
+  <ul>
+    <li><b>Pin 1:</b> J1 and J3 count from their left-hand ends; J2 counts from its right-hand end.</li>
+    <li><b>Harness plugs for Squeak Check:</b> TE MTA-100 9-position (3-640440-9) for J1, MTA-100 12-position (4-640440-2) for J3, and MTA-156 12-position for 18 AWG (4-640599-2) for J2, with an MTA-156 key (640629-1) in J2's key position.</li>
+    <li><b>Board variants:</b> the Spy Hunter manual lists the CSD as A080-91671; MAME names a Spy Hunter board A080-91671-E000.</li>
+  </ul>
+</section>
+
+<section id="using">
+  <h2>Using it</h2>
+  <p>Power up and count the sound board's LED flashes first; only a board that passes its self-test is worth dialing sounds on.</p>
+  <ol>
+    <li>Plug J1, J2 and J3 onto the sound board, connect the RCA jacks to an amp, and turn the volume knob fully counter-clockwise.</li>
+    <li>Apply power. The LED flashes once per passed test: flashes 1–4 are the ROMs (U7, U8, U17, U18), 5 is RAM (U6, U16) and 6 is the PIA (U9). Where it stops is the failed step.</li>
+    <li>Dial a sound 0–F and press PLAY. Turn the volume up.</li>
+    <li>Press RESET to restart the sound board at any time. It holds RESET low only while pressed.</li>
+  </ol>
+  <p>One press sends one 4-bit nibble. The boards' firmware generally reads commands as pairs of nibbles, so some sounds need two presses: dial the first nibble, PLAY, dial the second, PLAY. The meaning of each command lives in the game's sound ROMs and isn't documented in MAME, so expect some exploring.</p>
+  <p>The red TEST button on the sound board itself fires a level-7 interrupt on the 68000. What happens next is up to the game's ROMs; on a Spy Hunter CSD it plays the music.</p>
+</section>
+
+<section id="build">
+  <h2>Build it</h2>
+  <p>Everything needed to order boards and parts is in the <code>fab</code> folder. Any 2-layer PCB fab can make it from the Gerbers: FR-4, 1.6 mm, 1 oz copper, any mask colour with white silk, HASL or ENIG, 98 × 80 mm.</p>
+  <div class="dl">
+    <a href="fab/SqueakCheck_RevE4_Gerbers.zip" download><b>Gerbers + drill files</b><span>Zip, ready to upload to a fab</span></a>
+    <a href="fab/BOM.csv"><b>Bill of materials</b><span>CSV with Mouser part numbers</span></a>
+    <a href="fab/Harness_Pin_Map.csv"><b>Harness pin map</b><span>Every hole, its label and net</span></a>
+    <a href="fab/README.txt"><b>Build notes</b><span>Revision history and checks</span></a>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Ref</th><th>Qty</th><th>Part</th><th>Mfr part #</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="4">On the board</td></tr>
+      <tr><td>SW1</td><td>1</td><td>16-position coded hex rotary switch, Grayhill</td><td class="mono">94HBB16T</td></tr>
+      <tr><td class="nowrap">SW2, SW3</td><td>2</td><td>6 × 6 mm tactile switch, Omron (PLAY, RESET)</td><td class="mono">B3F-1000</td></tr>
+      <tr><td>RV1</td><td>1</td><td>9 mm 1k linear pot, knurled shaft, Bourns</td><td class="mono">PTV09A-4020U-B102</td></tr>
+      <tr><td>C1</td><td>1</td><td>1 µF 50 V X7R radial, 5.08 mm, KEMET</td><td class="mono">C330C105K5R5TA</td></tr>
+      <tr><td>RS0–RS3, RSIRQ</td><td>5</td><td>1k ¼ W 1% metal film, 0.4 in spacing, YAGEO</td><td class="mono">MFR-25FBF52-1K</td></tr>
+      <tr><td>RPD0–RPD3, RIRQ, RRST</td><td>6</td><td>10k ¼ W 1% metal film, 0.4 in spacing, YAGEO</td><td class="mono">MFR-25FBF52-10K</td></tr>
+      <tr><td>PWR1</td><td>1</td><td>KK-396 4-pin friction-lock header, Molex</td><td class="mono">26-60-4040</td></tr>
+      <tr><td>J4</td><td>1</td><td>Dual RCA jack, right angle, Same Sky</td><td class="mono">RCJ-2123</td></tr>
+      <tr class="group"><td colspan="4">Power cable</td></tr>
+      <tr><td>PWR1 mate</td><td>1 + 4</td><td>KK-396 4-pin housing + crimp terminals, Molex</td><td class="mono">09-50-3041, 08-50-0106</td></tr>
+      <tr class="group"><td colspan="4">Harness plugs (sound board end)</td></tr>
+      <tr><td>J1 plug</td><td>1</td><td>MTA-100 9-pos, 22 AWG, TE</td><td class="mono">3-640440-9</td></tr>
+      <tr><td>J3 plug</td><td>1</td><td>MTA-100 12-pos, 22 AWG, TE</td><td class="mono">4-640440-2</td></tr>
+      <tr><td>J2 plug</td><td>1</td><td>MTA-156 12-pos, 18 AWG, TE</td><td class="mono">4-640599-2</td></tr>
+      <tr><td>J2 key</td><td>1</td><td>MTA-156 polarizing key, TE</td><td class="mono">640629-1</td></tr>
+      <tr class="group"><td colspan="4">Wire and hardware</td></tr>
+      <tr><td>Wire</td><td>—</td><td>22 AWG UL1007 (J1, J3) and 18 AWG UL1007 (J2), Alpha Wire</td><td class="mono">3051, 3055</td></tr>
+      <tr><td>MH1–MH4</td><td>4</td><td>M3 standoffs and screws (optional); keep the head ≤ 5.5 mm at the hole next to the pot</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="design">
+  <h2>Design notes</h2>
+  <p>Everything on the board exists to fake the game's side of the harness safely; there are no active parts.</p>
+  <ul>
+    <li><b>Command lines:</b> each SOUND bit has a 1k series resistor and a 10k pull-down, so an open dial position reads 0 and a mis-plugged harness can't dump +5 V straight into a sound-board pin.</li>
+    <li><b>Hex dial:</b> a Grayhill 94HBB16T coded rotary switch. Its common is on +5 V and its 1-2-4-8 outputs drive SOUND0–SOUND3.</li>
+    <li><b>SIRQ:</b> a 10k pull-up holds it high; PLAY pulls it to ground through 1k. A 1 µF cap across the button (about 10 ms with the 10k) stops contact bounce from firing several commands.</li>
+    <li><b>RESET:</b> 10k pull-up to +5 V, button to ground. An earlier revision held RESET low permanently, which would have kept the sound board in reset.</li>
+    <li><b>E-GND (J2-7):</b> tied to ground. The Sounds Good grounds it on the board; the CSD uses it as the return for its input filter caps.</li>
+    <li><b>Volume:</b> a board-mounted 1k linear pot with a knurled shaft (Bourns PTV09A-4020U-B102), replacing Midway's 0–1k cabinet pot.</li>
+    <li><b>Strain relief:</b> every harness wire goes through a bare hole with its jacket on, then solders into the plated hole beside it.</li>
+    <li><b>Layout:</b> all traces use rounded corners, with a ground pour on the back. Design-rule and connectivity checks pass with no shorts, opens or copper islands, and the Gerbers were re-read with an independent parser to confirm they match.</li>
+  </ul>
+</section>
+
+<section id="compat">
+  <h2>Compatibility</h2>
+  <p>Three Midway boards share this J1/J2/J3 pinout and command interface, so Squeak Check works with all of them.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Board</th><th>CPU</th><th>Games</th></tr></thead>
+    <tbody>
+      <tr><td>Cheap Squeak Deluxe (A080-91671)</td><td>68000</td><td>Spy Hunter, Turbo Tag (prototype)</td></tr>
+      <tr><td>Sounds Good (same bare board, different parts and ROMs)</td><td>68000</td><td>Rampage, Power Drive, Star Guards, Xenophobe, Spy Hunter II, Blasted, International Team Laser (prototype)</td></tr>
+      <tr><td>Turbo Cheap Squeak</td><td>6809</td><td>Sarge, Max RPM, Demolition Derby, Spy Hunter II (second sound board)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Not compatible: the Super Sound I/O (SSIO), and the Williams System 11 sound boards in Arch Rivals, Pigskin 621AD and Tri-Sports. The pinball-era Bally boards (Cheap Squeak, Sounds Deluxe, pinball TCS) use different harnesses and weren't checked.</p>
+</section>
+
+<section id="sources">
+  <h2>Sources</h2>
+  <ul>
+    <li><a href="https://archive.org/details/ArcadeGameManualSpyhunter">Spy Hunter Parts and Operating Manual (Bally Midway), Internet Archive</a>: Cheap Squeak Deluxe schematic, assembly drawing and parts list</li>
+    <li><a href="https://github.com/mamedev/mame/blob/master/src/mame/bally/mcr3.cpp">MAME source, mcr3.cpp</a>: Spy Hunter's MCR-III hardware and output port 4</li>
+    <li><a href="https://github.com/mamedev/mame/blob/master/src/mame/bally/mcr68.cpp">MAME source, mcr68.cpp</a>: Xenophobe's MCR-68k hardware and Sounds Good control word</li>
+    <li><a href="https://github.com/mamedev/mame/blob/master/src/mame/bally/csd.cpp">MAME source, csd.cpp</a> and <a href="https://github.com/mamedev/mame/blob/master/src/mame/bally/midway_sound.cpp">midway_sound.cpp</a>: Cheap Squeak Deluxe and Sounds Good emulation</li>
+    <li><a href="https://github.com/mamedev/mame/blob/master/src/mame/bally/mcr.cpp">MAME source, mcr.cpp</a>: early MCR boards, Sound I/O and Super Sound I/O</li>
+    <li><a href="https://forums.arcade-museum.com/threads/spy-hunter-peter-gunn-sound-missing.463820/">Forum: Spy Hunter Peter Gunn sound missing</a> and <a href="https://www.zdziarski.com/blog/?p=13373">Zdziarski, Arcade Hardware Hacking Part III</a>: the CSD plays only the Peter Gunn theme</li>
+    <li><a href="https://forums.arcade-museum.com/threads/solved-midway-xenophobe-no-sound-issue.502763/">Forum: Xenophobe no sound</a>: a failed Sounds Good leaves Xenophobe silent</li>
+    <li><a href="https://forums.arcade-museum.com/threads/spy-hunter-harness-help-j1-connector.547557/">Forum: Spy Hunter harness J1 connector</a>: the original harness's IDC connectors</li>
+    <li><a href="https://www.pinwiki.com/wiki/index.php/Bally/Stern">PinWiki: Bally/Stern</a> and <a href="http://www.pinrepair.com/6803/">PinRepair: Bally 6803 games</a>: Bally pinball sound boards and the games that used them</li>
+    <li><a href="https://www.te.com/en/products/connectors/pcb-connectors/intersection/mta-100-mta-156-connectors.html">TE Connectivity MTA-100 and MTA-156 connectors</a></li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="pix">HOW TO SQUEAK: PLUG IN · DIAL · SMASH PLAY!</p>
+    <p>© 2026 Ethical Paul. All rights reserved. Not affiliated with Midway or Bally; game and board names belong to their owners.</p>
+  </div>
+</footer>
+
+</body>
+</html>

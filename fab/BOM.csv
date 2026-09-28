@@ -1,0 +1,22 @@
+Ref,Qty,Description,Manufacturer,Mfr Part #,Mouser #,Unit price (Mouser; Sept 2026),Notes
+--- ON THE BOARD ---,,,,,,,
+SW1,1,16-pos hex rotary DIP switch (coded),Grayhill,94HBB16T,706-94HBB16T,$7.02,"0.100"" pitch, 0.300"" rows"
+"SW2,SW3",2,6x6 mm THT tactile switch,Omron,B3F-1000,653-B3F-1000,$0.34,"SW2 = PLAY, SW3 = RESET. Wired across a diagonal pad pair"
+RV1,1,"Volume pot, 9 mm, 1k linear, vertical 20 mm KNURLED insulated shaft (turn by finger, no knob needed)",Bourns,PTV09A-4020U-B102,,"~$0.46-0.94 (Octopart, Sept 2026)",Same footprint as the flatted-shaft version. Listed at Mouser; Mouser # likely 652-PTV09A-4020UB102 (confirm on their site)
+C1,1,"1 uF 50 V X7R ceramic, radial, 5.08 mm",KEMET,C330C105K5R5TA,80-C330C105K5R,$0.54,PLAY debounce
+"RSIRQ,RS0,RS1,RS2,RS3",5,"1k 1/4 W 1% metal film, axial",YAGEO,MFR-25FBF52-1K,603-MFR-25FBF52-1K,$0.10,10.16 mm (0.4 in) lead spacing
+"RIRQ,RPD0,RPD1,RPD2,RPD3,RRST",6,"10k 1/4 W 1% metal film, axial",YAGEO,MFR-25FBF52-10K,603-MFR-25FBF52-10K,$0.10,RIRQ = SIRQ pull-up; RRST = RESET pull-up
+PWR1,1,KK-396 4-pos vertical friction-lock header,Molex,26-60-4040,538-26-60-4040,$0.44,
+J4,1,Dual RCA jack (red/white) right angle,Same Sky,RCJ-2123,490-RCJ-2123,$2.33,
+--- POWER CABLE (plugs into PWR1) ---,,,,,,,
+PWR1 mate,1,KK-396 4-pos housing,Molex,09-50-3041,538-09-50-3041,$0.10,
+PWR1 mate,4,KK-396 crimp terminal 18-24 AWG,Molex,08-50-0106,538-08-50-0106,$0.12,
+"--- HARNESS PLUGS (sound board end) — TE MTA IDC, as on the original Midway harness ---",,,,,,,
+J1 plug,1,"MTA-100 IDC receptacle, 9 pos, 22 AWG (red), closed end",TE Connectivity,3-640440-9,,,Mates with the sound board's .025 sq. posts on 0.100 in pitch. Leave pin 7 (KEY) empty
+J3 plug,1,"MTA-100 IDC receptacle, 12 pos, 22 AWG (red), closed end",TE Connectivity,4-640440-2,,,0.100 in pitch. Leave pin 9 (KEY) empty
+J2 plug,1,"MTA-156 IDC receptacle, 12 pos, 18 AWG (orange), feed-through",TE Connectivity,4-640599-2,,,Mates with .045 sq. posts on 0.156 in pitch. Leave pin 8 (KEY) empty
+J2 key,1,MTA-156 polarizing key,TE Connectivity,640629-1,,,Plugs the KEY position so J2 can't go on shifted
+--- NOT LOOKED UP ON MOUSER (their site began blocking automated lookups) ---,,,,,,,
+WIRE22,1,"22 AWG stranded, UL1007",Alpha Wire,3051 (colour suffix e.g. BK005),,,J1 and J3 harnesses
+WIRE18,1,"18 AWG stranded, UL1007",Alpha Wire,3055 (colour suffix e.g. BK005),,,J2 harness
+MH1-MH4,4,M3 standoffs + screws,any,,,,Optional; 3.2 mm NPTH corner holes. Keep screw heads <= 5.5 mm dia at the bottom-right hole (next to the pot)
