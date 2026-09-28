@@ -6,13 +6,15 @@ By Ethical Paul.
 
 **Website:** the full write-up (how the boards work, pinouts, hook-up diagram, history) is in `index.html`, published with GitHub Pages.
 
-![Squeak Check Rev E.4](images/board-top.png)
+![Squeak Check Rev E.5](images/board-top.png)
 
 ## Files
 
 | Path | What it is |
 | --- | --- |
-| `fab/SqueakCheck_RevE4_Gerbers.zip` | Gerbers and drill files, Rev E.4 (98 × 80 mm, 2 layers, 1.6 mm) |
+| `fab/SqueakCheck_RevE5_Gerbers.zip` | Gerbers and drill files, Rev E.5 (98 × 80 mm, 2 layers, 1.6 mm) |
+| `fab/Schematic_RevE5.pdf` | Schematic, drawn from and checked against the board netlist |
+| `fab/KiCad/` | KiCad 8 schematic and PCB, generated from the board data (refill the zone and run DRC after opening) |
 | `fab/BOM.csv` | Bill of materials with Mouser part numbers |
 | `fab/Harness_Pin_Map.csv` | Every harness hole: connector, pin, label, net, position |
 | `fab/README.txt` | Revision history and verification notes |

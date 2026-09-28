@@ -88,19 +88,20 @@ footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); 
 
 <header class="hero">
   <div class="wrap">
-    <p class="kicker">REV E.4 · OPEN HARDWARE</p>
+    <p class="kicker">REV E.5 · DIY BENCH TESTER</p>
     <h1>SQUEAK CHECK!</h1>
     <p class="sub">Cheap Squeak Deluxe · Sounds Good · Bench tester</p>
     <p class="by">By Ethical Paul</p>
     <p class="lead">Squeak Check lets you power up a Midway Cheap Squeak Deluxe or Sounds Good arcade sound board on the bench and make it play any sound, without the game's CPU board, harness or cabinet.</p>
     <div class="buttons">
-      <a class="btn primary" href="fab/SqueakCheck_RevE4_Gerbers.zip" download>Download Gerbers</a>
+      <a class="btn primary" href="fab/SqueakCheck_RevE5_Gerbers.zip" download>Download Gerbers</a>
       <a class="btn" href="#build">Parts list</a>
+      <a class="btn" href="fab/Schematic_RevE5.pdf">Schematic</a>
       <a class="btn" href="#pinout">Pinout</a>
     </div>
     <figure class="board">
-      <img src="images/board-top.png" width="2352" height="1920" alt="Squeak Check Rev E.4, top side: hex dial, PLAY and RESET buttons, volume pot, RCA jacks and three rows of harness solder holes">
-      <figcaption>Rev E.4, top side, rendered from the fab files. 98 × 80 mm.</figcaption>
+      <img src="images/board-top.png" width="2352" height="1920" alt="Squeak Check Rev E.5, top side: hex dial, PLAY and RESET buttons, volume pot, fuses and rail LEDs, RCA jacks and three rows of harness solder holes">
+      <figcaption>Rev E.5, top side, rendered from the fab files. 98 × 80 mm.</figcaption>
     </figure>
   </div>
 </header>
@@ -128,7 +129,8 @@ footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); 
   <ul>
     <li><b>Size:</b> 98 × 80 mm, 2 layers, all through-hole, about $20 in parts. The biggest single part is the $7 hex dial.</li>
     <li><b>Controls:</b> a 16-position hex dial (sound 0–F), a PLAY button, a RESET button and an on-board 1k volume pot.</li>
-    <li><b>Power in:</b> a 4-pin KK-396 header (+5 V, GND, GND, +12 V) from any bench supply.</li>
+    <li><b>Power in:</b> a 4-pin KK-396 header (+5 V, GND, GND, +12 V) from any bench supply; 5 V at 1 A and 12 V at 0.5 A is plenty.</li>
+    <li><b>Protection and indicators:</b> resettable fuses on both rails, and a green LED on each rail after its fuse. A dark LED means no supply or a tripped fuse.</li>
     <li><b>Out to the sound board:</b> three wire harnesses, J1, J2 and J3, soldered into the tester. Their other ends carry the plugs that go on the sound board.</li>
     <li><b>Audio out:</b> line level on both RCA jacks. Feed it to an amp or powered speaker, not a bare speaker.</li>
   </ul>
@@ -238,7 +240,7 @@ footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); 
   <p>Power up and count the sound board's LED flashes first; only a board that passes its self-test is worth dialing sounds on.</p>
   <ol>
     <li>Plug J1, J2 and J3 onto the sound board, connect the RCA jacks to an amp, and turn the volume knob fully counter-clockwise.</li>
-    <li>Apply power. The LED flashes once per passed test: flashes 1–4 are the ROMs (U7, U8, U17, U18), 5 is RAM (U6, U16) and 6 is the PIA (U9). Where it stops is the failed step.</li>
+    <li>Apply power. Both green rail LEDs on Squeak Check should light; if one stays dark, check the supply or let a tripped fuse cool. Then watch the sound board: its LED flashes once per passed test: flashes 1–4 are the ROMs (U7, U8, U17, U18), 5 is RAM (U6, U16) and 6 is the PIA (U9). Where it stops is the failed step.</li>
     <li>Dial a sound 0–F and press PLAY. Turn the volume up.</li>
     <li>Press RESET to restart the sound board at any time. It holds RESET low only while pressed.</li>
   </ol>
@@ -248,12 +250,14 @@ footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); 
 
 <section id="build">
   <h2>Build it</h2>
-  <p>Everything needed to order boards and parts is in the <code>fab</code> folder. Any 2-layer PCB fab can make it from the Gerbers: FR-4, 1.6 mm, 1 oz copper, any mask colour with white silk, HASL or ENIG, 98 × 80 mm.</p>
+  <p>Everything needed to order boards and parts is in the <code>fab</code> folder, along with a schematic and KiCad files. The KiCad files were generated from the board data rather than drawn in KiCad, so open them and refill the ground zone (B) before relying on them; the Gerbers are the fab source. Any 2-layer PCB fab can make it from the Gerbers: FR-4, 1.6 mm, 1 oz copper, any mask colour with white silk, HASL or ENIG, 98 × 80 mm.</p>
   <div class="dl">
-    <a href="fab/SqueakCheck_RevE4_Gerbers.zip" download><b>Gerbers + drill files</b><span>Zip, ready to upload to a fab</span></a>
+    <a href="fab/SqueakCheck_RevE5_Gerbers.zip" download><b>Gerbers + drill files</b><span>Zip, ready to upload to a fab</span></a>
     <a href="fab/BOM.csv"><b>Bill of materials</b><span>CSV with Mouser part numbers</span></a>
     <a href="fab/Harness_Pin_Map.csv"><b>Harness pin map</b><span>Every hole, its label and net</span></a>
     <a href="fab/README.txt"><b>Build notes</b><span>Revision history and checks</span></a>
+    <a href="fab/Schematic_RevE5.pdf"><b>Schematic</b><span>PDF, drawn from the board netlist</span></a>
+    <a href="fab/KiCad/SqueakCheck.kicad_sch"><b>KiCad files</b><span>Schematic + PCB in the fab/KiCad folder</span></a>
   </div>
   <div class="table-wrap"><table>
     <thead><tr><th>Ref</th><th>Qty</th><th>Part</th><th>Mfr part #</th></tr></thead>
@@ -267,6 +271,10 @@ footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); 
       <tr><td>RPD0–RPD3, RIRQ, RRST</td><td>6</td><td>10k ¼ W 1% metal film, 0.4 in spacing, YAGEO</td><td class="mono">MFR-25FBF52-10K</td></tr>
       <tr><td>PWR1</td><td>1</td><td>KK-396 4-pin friction-lock header, Molex</td><td class="mono">26-60-4040</td></tr>
       <tr><td>J4</td><td>1</td><td>Dual RCA jack, right angle, Same Sky</td><td class="mono">RCJ-2123</td></tr>
+      <tr><td>F1</td><td>1</td><td>Resettable fuse, +5 V, 1.35 A hold, Bourns</td><td class="mono">MF-R135</td></tr>
+      <tr><td>F2</td><td>1</td><td>Resettable fuse, +12 V, 0.5 A hold, Bourns</td><td class="mono">MF-R050</td></tr>
+      <tr><td>D1, D2</td><td>2</td><td>3 mm green LED, Kingbright</td><td class="mono">WP710A10GD</td></tr>
+      <tr><td>RL1, RL2</td><td>2</td><td>1k and 3.3k, 1/6 W metal film, 0.3 in spacing, YAGEO</td><td class="mono">MFR-12FTF52-1K, -3K3</td></tr>
       <tr class="group"><td colspan="4">Power cable</td></tr>
       <tr><td>PWR1 mate</td><td>1 + 4</td><td>KK-396 4-pin housing + crimp terminals, Molex</td><td class="mono">09-50-3041, 08-50-0106</td></tr>
       <tr class="group"><td colspan="4">Harness plugs (sound board end)</td></tr>
@@ -291,6 +299,9 @@ footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); 
     <li><b>RESET:</b> 10k pull-up to +5 V, button to ground. An earlier revision held RESET low permanently, which would have kept the sound board in reset.</li>
     <li><b>E-GND (J2-7):</b> tied to ground. The Sounds Good grounds it on the board; the CSD uses it as the return for its input filter caps.</li>
     <li><b>Volume:</b> a board-mounted 1k linear pot with a knurled shaft (Bourns PTV09A-4020U-B102), replacing Midway's 0–1k cabinet pot.</li>
+    <li><b>Fuses:</b> Bourns MF-R135 on +5 V and MF-R050 on +12 V, right after the power header, so a shorted sound board trips the fuse instead of cooking the tester. They reset when power is removed. The +5 V fuse drops about 0.1 V at 1 A; set the supply to 5.1 V if you want exactly 5.0 V at the board.</li>
+    <li><b>Rail LEDs:</b> one green LED per rail, after the fuses, at about 3 mA each (1k on +5 V, 3.3k on +12 V).</li>
+    <li><b>Mounting:</b> the 3.2 mm corner holes take M3 or #4-40 screws. Keep pan heads to 5.6 mm or smaller; the two right-hand holes sit close to the volume pot and a harness hole.</li>
     <li><b>Strain relief:</b> every harness wire goes through a bare hole with its jacket on, then solders into the plated hole beside it.</li>
     <li><b>Layout:</b> all traces use rounded corners, with a ground pour on the back. Design-rule and connectivity checks pass with no shorts, opens or copper islands, and the Gerbers were re-read with an independent parser to confirm they match.</li>
   </ul>

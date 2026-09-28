@@ -1,4 +1,4 @@
-SQUEAK CHECK! — Midway sound board bench tester — REV E.4
+SQUEAK CHECK! — Midway sound board bench tester — REV E.5
 By Ethical Paul
 =========================================================
 
@@ -18,6 +18,18 @@ same command interface (4 sound-select bits + SIRQ strobe, 2 status bits back):
 NOT compatible: Super Sound I/O (SSIO), and the Williams System 11 boards in
 Arch Rivals / Pigskin / Tri-Sports. Pinball-era Bally boards (Cheap Squeak,
 Sounds Deluxe, pinball TCS) use different harnesses and were not checked.
+
+REV E.5: POWER PROTECTION AND INDICATORS (review feedback).
+- F1 (Bourns MF-R135, 1.35 A hold) on +5 V and F2 (MF-R050, 0.5 A hold) on +12 V:
+  resettable fuses right after the power header, so a shorted sound board
+  can't cook the tester's traces or connector.
+- D1/D2 green LEDs on +5 V and +12 V, AFTER the fuses (1k / 3.3k, ~3 mA): a dark
+  LED means no supply or a tripped fuse.
+- Suggested supply printed on the board: 5 V 1 A, 12 V 0.5 A (estimated from
+  the sound board's chips; measure your own board).
+- Mounting note on the silk: M3 or #4-40, pan head no bigger than 5.6 mm.
+- LED self-test legend moved into the how-to panel to make room.
+Harness holes, pin order, names and every sound-board signal are unchanged.
 
 REV E.4: BOARD NARROWED 108 -> 98 MM. J1 stays on the left edge; the resistor
 block tucked in against the J1 labels and everything else slid left (J2, J3, pot,

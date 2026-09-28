@@ -8,6 +8,11 @@ C1,1,"1 uF 50 V X7R ceramic, radial, 5.08 mm",KEMET,C330C105K5R5TA,80-C330C105K5
 "RIRQ,RPD0,RPD1,RPD2,RPD3,RRST",6,"10k 1/4 W 1% metal film, axial",YAGEO,MFR-25FBF52-10K,603-MFR-25FBF52-10K,$0.10,RIRQ = SIRQ pull-up; RRST = RESET pull-up
 PWR1,1,KK-396 4-pos vertical friction-lock header,Molex,26-60-4040,538-26-60-4040,$0.44,
 J4,1,Dual RCA jack (red/white) right angle,Same Sky,RCJ-2123,490-RCJ-2123,$2.33,
+F1,1,"PTC resettable fuse, +5 V: 1.35 A hold / 2.7 A trip, radial 5.1 mm, 0.065-0.17 ohm",Bourns,MF-R135,652-MF-R135 (confirm),,Rev E.5. Drops ~0.1 V at 1 A; set the bench supply to 5.1 V if you want 5.0 V at the board
+F2,1,"PTC resettable fuse, +12 V: 0.5 A hold / 1.0 A trip, radial 5.1 mm",Bourns,MF-R050,652-MF-R050 (confirm),,Rev E.5
+"D1,D2",2,"LED 3 mm green, diffused",Kingbright,WP710A10GD,604-WP710A10GD (confirm),,"Rev E.5 rail indicators, after the fuses. Square pad / flat side = cathode"
+RL1,1,"1k 1/6 W 1% metal film, 7.62 mm spacing",YAGEO,MFR-12FTF52-1K,603-MFR-12FTF52-1K,,"D1 (+5 V) current limit, ~3 mA"
+RL2,1,"3.3k 1/6 W 1% metal film, 7.62 mm spacing",YAGEO,MFR-12FTF52-3K3,603-MFR-12FTF52-3K3 (confirm),,"D2 (+12 V) current limit, ~3 mA"
 --- POWER CABLE (plugs into PWR1) ---,,,,,,,
 PWR1 mate,1,KK-396 4-pos housing,Molex,09-50-3041,538-09-50-3041,$0.10,
 PWR1 mate,4,KK-396 crimp terminal 18-24 AWG,Molex,08-50-0106,538-08-50-0106,$0.12,
