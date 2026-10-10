@@ -24,4 +24,4 @@ J2 key,1,MTA-156 polarizing key,TE Connectivity,640629-1,,,Plugs the KEY positio
 --- NOT LOOKED UP ON MOUSER (their site began blocking automated lookups) ---,,,,,,,
 WIRE22,1,"22 AWG stranded, UL1007",Alpha Wire,3051 (colour suffix e.g. BK005),,,J1 and J3 harnesses
 WIRE18,1,"18 AWG stranded, UL1007",Alpha Wire,3055 (colour suffix e.g. BK005),,,J2 harness
-MH1-MH4,4,M3 standoffs + screws,any,,,,Optional; 3.2 mm NPTH corner holes. Keep screw heads <= 5.5 mm dia at the bottom-right hole (next to the pot)
+MH1-MH4,4,M3 standoffs + screws,any,,,,Optional; 3.2 mm NPTH corner holes. Pan heads <= 5.6 mm dia, as printed on the board (the right-hand holes sit close to the pot and a harness hole)

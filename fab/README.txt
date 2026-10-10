@@ -35,7 +35,7 @@ REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
   the switch's printed 0 lines up with the silk 0. REV E.5 -> REV E.6.
 - Three small ground-pour keep-outs on the back (around 29.8,51.8 / 32.3,47.4 /
   30.9,30.1 in Gerber coordinates) stop the rerouted tracks from leaving an
-  unconnected pour island and two thin slivers.
+  unconnected pour island and two thin necks.
 - Schematic unchanged electrically (dial 1-2-4-8 -> SOUND0-3); the KiCad
   symbol now lists SW1's pins in footprint order (1, CL, 4, 8, CR, 2).
 - E.5 BOARDS: fit SW1 with its 0 toward the BOTTOM edge to get the right bits.
@@ -56,8 +56,8 @@ Harness holes, pin order, names and every sound-board signal are unchanged.
 REV E.4: BOARD NARROWED 108 -> 98 MM. J1 stays on the left edge; the resistor
 block tucked in against the J1 labels and everything else slid left (J2, J3, pot,
 RCA jacks and power header move as groups, with pitches, hole sizes, pin order and
-labels all unchanged). +12V now runs between the SOUND2 trace and the RESET
-button on the back. Netlist identical to E.3.
+labels all unchanged). +12V now runs between the SOUND2 trace (SOUND3 from
+E.6 on) and the RESET button on the back. Netlist identical to E.3.
 
 REV E.3: VOLUME POT ON THE BOARD. The J5 A/W/B wire pads are gone; RV1 (Bourns
 PTV09A-4020U-B102, 1k linear, 9 mm, vertical 20 mm knurled shaft
@@ -112,10 +112,11 @@ VERIFICATION (Rev E.6)
 Gerbers re-read with an independent parser and rasterised at 0.04 mm:
 - Netlist: every one of the 135 holes' copper checked against the intended
   net (23 nets): 0 shorts, 0 opens, 0 unconnected copper islands.
-- Clearance between different nets: 0.52 mm minimum on top, 0.40 mm on the
-  back (rule 0.30 mm). Same as E.5.
-- Thin copper: no new necks or slivers; the few small pour points left near
-  thermal spokes are the same ones E.5 had.
+- Clearance between different nets: 0.50 mm minimum on top, 0.40 mm on the
+  back (rule 0.30 mm). Same as E.5; the rerouted tracks have 0.68 mm or more.
+- Thin copper: the new keep-outs leave four tiny pointed tips of ground pour
+  (under 0.3 mm long), the same kind of feature E.5 already had at its
+  thermal spokes and corners. Fabs handle these.
 - Drills: 98 plated + 37 non-plated, all on their pads; files unchanged from E.5.
 - Silkscreen: none on exposed pads.
 - KiCad PCB tracks and pads redrawn and compared with the Gerber copper:

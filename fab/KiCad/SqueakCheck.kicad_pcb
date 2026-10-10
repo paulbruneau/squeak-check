@@ -11,7 +11,6 @@
     (48 "B.Fab" user) (49 "F.Fab" user))
   (setup (pad_to_mask_clearance 0.05) (pcbplotparams (layerselection 0x00010fc_ffffffff) (outputdirectory "gerbers/")))
   (net 0 "")
-  (net 8 "GND")
   (net 2 "+12V")
   (net 3 "+12V_IN")
   (net 4 "+5V")
