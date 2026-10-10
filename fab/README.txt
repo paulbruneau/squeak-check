@@ -33,6 +33,13 @@ REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
     SW1 top-right hole    -> S3 (RS3/RPD3)   back copper
 - Silkscreen: a "0" replaces the top dial tick and an "8" the bottom one, so
   the switch's printed 0 lines up with the silk 0. REV E.5 -> REV E.6.
+- Silkscreen text: every label is now at least 1.1 mm tall (capital height)
+  with strokes of about 0.2 mm; the smallest used to be 0.72 mm. Grown in
+  place: the LED legend, LINE LEVEL note, power-tag pills, F1/F2/5V/12V,
+  resistor values, column headings, TRIGGER, 1uF, AWG notes, LOUDER/VOLUME,
+  PICK A SOUND, INSERT POWER / KK-396, and the size and mounting notes.
+  "5V 1A · 12V 0.5A" is now two lines ("5V 1A" / "12V 0.5A") to clear the
+  RCA jack outline. Nothing moved onto pads; copper and drills unchanged.
 - Three small ground-pour keep-outs on the back (around 29.8,51.8 / 32.3,47.4 /
   30.9,30.1 in Gerber coordinates) stop the rerouted tracks from leaving an
   unconnected pour island and two thin necks.
@@ -118,7 +125,8 @@ Gerbers re-read with an independent parser and rasterised at 0.04 mm:
   (under 0.3 mm long), the same kind of feature E.5 already had at its
   thermal spokes and corners. Fabs handle these.
 - Drills: 98 plated + 37 non-plated, all on their pads; files unchanged from E.5.
-- Silkscreen: none on exposed pads.
+- Silkscreen: none on exposed pads; all text at least 1.1 mm tall and
+  0.2 mm or more from other silk (the power tags keep their E.5 spacing).
 - KiCad PCB tracks and pads redrawn and compared with the Gerber copper:
   identical on top, and every KiCad track present on the back.
 (No KiCad/Altium DRC was run here. Preview the zip in your fab's Gerber viewer
