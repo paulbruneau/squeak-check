@@ -1,4 +1,4 @@
-SQUEAK CHECK! — Midway sound board bench tester — REV E.5
+SQUEAK CHECK! — Midway sound board bench tester — REV E.6
 By Ethical Paul
 =========================================================
 
@@ -18,6 +18,28 @@ same command interface (4 sound-select bits + SIRQ strobe, 2 status bits back):
 NOT compatible: Super Sound I/O (SSIO), and the Williams System 11 boards in
 Arch Rivals / Pigskin / Tri-Sports. Pinball-era Bally boards (Cheap Squeak,
 Sounds Deluxe, pinball TCS) use different harnesses and were not checked.
+
+REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
+- On E.5 the SW1 footprint's pin map assumed the Grayhill 94HBB16T went in with
+  the 0 on its dial toward the BOTTOM of the board. The switch fits its holes
+  either way round, and fitted with 0 at the top (the natural way) it swapped
+  SOUND0<->SOUND1 and SOUND2<->SOUND3 (dial 1 sent 2, dial 4 sent 8, etc.).
+- E.6 turns the footprint's pin numbers 180 degrees: with the 0 at the top,
+  pin 1 is the top-left hole and drives SOUND0. Hole positions are unchanged;
+  the four sound tracks are swapped where they meet the resistors:
+    SW1 top-left hole     -> S0 (RS0/RPD0)   front copper
+    SW1 bottom-right hole -> S1 (RS1/RPD1)   back copper
+    SW1 bottom-left hole  -> S2 (RS2/RPD2)   front copper
+    SW1 top-right hole    -> S3 (RS3/RPD3)   back copper
+- Silkscreen: a "0" replaces the top dial tick and an "8" the bottom one, so
+  the switch's printed 0 lines up with the silk 0. REV E.5 -> REV E.6.
+- Three small ground-pour keep-outs on the back (around 29.8,51.8 / 32.3,47.4 /
+  30.9,30.1 in Gerber coordinates) stop the rerouted tracks from leaving an
+  unconnected pour island and two thin slivers.
+- Schematic unchanged electrically (dial 1-2-4-8 -> SOUND0-3); the KiCad
+  symbol now lists SW1's pins in footprint order (1, CL, 4, 8, CR, 2).
+- E.5 BOARDS: fit SW1 with its 0 toward the BOTTOM edge to get the right bits.
+Every other hole, part, net and label is unchanged from E.5.
 
 REV E.5: POWER PROTECTION AND INDICATORS (review feedback).
 - F1 (Bourns MF-R135, 1.35 A hold) on +5 V and F2 (MF-R050, 0.5 A hold) on +12 V:
@@ -75,25 +97,33 @@ Red TEST button ON the sound board: wired to the 68000's interrupt lines
 sister pinball boards it plays one fixed test sound (a "bong" or an explosion)
 or just reboots the board; it is not a cycle through all sounds.
 
-Sound numbers: the connector carries 4 bits per strobe. The boards' firmware
-generally treats commands as pairs of nibbles ("command followed by command"),
-so a single dial+PLAY press sends one nibble. Try single presses first; for other
-sounds, dial the first nibble, press PLAY, dial the second, press PLAY. The exact
-command list lives in each game's sound ROMs and is not documented in MAME.
+Sound numbers: the connector carries 4 bits per strobe; one dial+PLAY press
+sends the number on the dial. The command list lives in each game's sound ROMs
+and is not documented in MAME. Spy Hunter CSD (only the two low bits matter):
+1 = full Peter Gunn theme, 2 = short intro, 3 = the "player died" ending (send
+it while the theme is playing). Other games' ROMs may expect a sequence of
+presses.
 
 Start with the VOLUME knob turned down (fully counter-clockwise). Line-level mono audio
 appears on both RCA jacks; feed an amplifier or powered speaker.
 
-VERIFICATION
-------------
-Raster DRC at 0.04 mm: 0 shorts, 0 opens, 0 clearance < 0.30 mm, 0 islands.
-Netlist = Rev D5 original + the four E.1 changes + the on-board pot (E.3),
-checked pin by pin.
-Gerbers re-read with gerbonara and diffed against the checked geometry:
-0 mismatches on copper, mask and silk. (No KiCad/Altium DRC available here —
-preview the zip in your fab's Gerber viewer before ordering.)
+VERIFICATION (Rev E.6)
+---------------------
+Gerbers re-read with an independent parser and rasterised at 0.04 mm:
+- Netlist: every one of the 135 holes' copper checked against the intended
+  net (23 nets): 0 shorts, 0 opens, 0 unconnected copper islands.
+- Clearance between different nets: 0.52 mm minimum on top, 0.40 mm on the
+  back (rule 0.30 mm). Same as E.5.
+- Thin copper: no new necks or slivers; the few small pour points left near
+  thermal spokes are the same ones E.5 had.
+- Drills: 98 plated + 37 non-plated, all on their pads; files unchanged from E.5.
+- Silkscreen: none on exposed pads.
+- KiCad PCB tracks and pads redrawn and compared with the Gerber copper:
+  identical on top, and every KiCad track present on the back.
+(No KiCad/Altium DRC was run here. Preview the zip in your fab's Gerber viewer
+before ordering.)
 
 ORDERING
 --------
 2 layers, FR-4, 1.6 mm, 1 oz, any mask colour, white silk, ENIG or HASL.
-98 x 80 mm. Upload the Gerbers/ folder zipped.
+98 x 80 mm. Upload SqueakCheck_RevE6_Gerbers.zip as it is.
