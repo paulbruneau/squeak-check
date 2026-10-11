@@ -6,10 +6,12 @@ from scipy import ndimage as ndi
 sys.path.insert(0, os.path.dirname(__file__))
 from gerb import *
 
-d, out_dir = sys.argv[1], sys.argv[2]
+d, out_dir = sys.argv[1], sys.argv[2]   # optional 3rd arg: 'green'
 PPM_OUT, SS = 24, 3
 ppm = PPM_OUT * SS
 MASK = (20, 21, 24); CU = (44, 46, 52); GOLD = (214, 178, 98); SILK = (244, 241, 232); FR4 = (58, 52, 40)
+if len(sys.argv) > 3 and sys.argv[3] == 'green':       # classic green solder mask
+    MASK = (22, 92, 50); CU = (52, 138, 74); FR4 = (150, 130, 80)
 
 
 def L(suffix):
