@@ -15,6 +15,7 @@ The original board generator (`design.py`, mentioned on the schematic) isn't in 
 | `silkedit.py` | Moves/scales silkscreen outlines in place |
 | `bigtext.py`, `check_silk.py` | Raises small silkscreen text to 1.1 mm and checks spacing |
 | `credits.py`, `add_email.py` | Header layout: credit + email stack, supported-boards stack |
+| `revblock.py` | Scales the REV / size / mounting block and centres it in the open area |
 
 Silkscreen text is stored as outlines, so new text is drawn from a font file and traced. The credit line is Barlow Condensed SemiBold; the TTF and its licence (SIL OFL) are in `fab/fonts/`.
 

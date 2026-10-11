@@ -43,6 +43,8 @@ REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
 - Header under the title is now two stacks. Left: "By Ethical Paul" over
   "paul@ethicalpaul.com". Right, at 1.3 mm: CHEAP SQUEAK DELUXE / SOUNDS GOOD
   / TURBO CHEAP SQUEAK (replaces the one-line "... · BENCH TESTER" subtitle).
+- REV E.6 / board size / mounting block scaled up 1.6x (REV 2.2 mm, notes
+  1.8 mm) and centred in the open area between the SOUND2 row and J2.
 - Three small ground-pour keep-outs on the back (around 29.8,51.8 / 32.3,47.4 /
   30.9,30.1 in Gerber coordinates) stop the rerouted tracks from leaving an
   unconnected pour island and two thin necks.
