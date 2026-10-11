@@ -40,6 +40,8 @@ REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
   PICK A SOUND, INSERT POWER / KK-396, and the size and mounting notes.
   "5V 1A · 12V 0.5A" is now two lines ("5V 1A" / "12V 0.5A") to clear the
   RCA jack outline. Nothing moved onto pads; copper and drills unchanged.
+- Subtitle now names all three boards: "CHEAP SQUEAK DELUXE · SOUNDS GOOD ·
+  TURBO CHEAP SQUEAK" (was "... · BENCH TESTER").
 - Three small ground-pour keep-outs on the back (around 29.8,51.8 / 32.3,47.4 /
   30.9,30.1 in Gerber coordinates) stop the rerouted tracks from leaving an
   unconnected pour island and two thin necks.
