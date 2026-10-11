@@ -13,7 +13,8 @@ s = Silk(open(src).read())
 LIST_CAP = 1.30
 LIST_RIGHT = 43.80          # widest line ends here (clear of the F1 label at x 44.16)
 LIST_BASES = (71.15, 69.20, 67.25)
-CREDIT_BASE = 71.15         # "By Ethical Paul" baseline (cap tops line up with the list)
+CREDIT_BASE = 70.70         # "By Ethical Paul" baseline (cap top lines up with the list)
+CREDIT_K = 1.25             # credit cap height 1.40 -> 1.75 mm
 
 # --- the original subtitle glyphs
 ps = s.select((9.0, 46.0, 70.2, 72.0), pols=('D', 'C'))
@@ -92,8 +93,7 @@ for g in D:
 # move "By Ethical Paul" up to the list's first baseline
 cred = s.select((9.0, 19.6, 66.8, 69.3), pols=('D', 'C'))
 assert len(cred) == 19, len(cred)
-dy = CREDIT_BASE - 67.60
-s.transform(cred, lambda x, y: (x, y + dy))
+s.transform(cred, lambda x, y: (9.208 + (x - 9.208) * CREDIT_K, CREDIT_BASE + (y - 67.60) * CREDIT_K))
 
 L = [l for i, l in enumerate(s.lines) if i not in dead and l is not None]
 j = len(L) - 1 - L[::-1].index('M02*')

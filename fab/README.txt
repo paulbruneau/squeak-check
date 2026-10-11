@@ -40,8 +40,8 @@ REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
   PICK A SOUND, INSERT POWER / KK-396, and the size and mounting notes.
   "5V 1A · 12V 0.5A" is now two lines ("5V 1A" / "12V 0.5A") to clear the
   RCA jack outline. Nothing moved onto pads; copper and drills unchanged.
-- Header under the title is now two stacks. Left: "By Ethical Paul" over
-  "paul@ethicalpaul.com". Right, at 1.3 mm: CHEAP SQUEAK DELUXE / SOUNDS GOOD
+- Header under the title is now two stacks. Left: "By Ethical Paul" (1.75 mm)
+  over "paul@ethicalpaul.com" (1.47 mm), both Barlow Condensed SemiBold. Right, at 1.3 mm: CHEAP SQUEAK DELUXE / SOUNDS GOOD
   / TURBO CHEAP SQUEAK (replaces the one-line "... · BENCH TESTER" subtitle).
 - REV E.6 / board size / mounting block scaled up 1.6x (REV 2.2 mm, notes
   1.8 mm) and centred in the open area between the SOUND2 row and J2.

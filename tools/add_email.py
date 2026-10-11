@@ -10,8 +10,8 @@ src, dst = sys.argv[1], sys.argv[2]
 TEXT = 'paul@ethicalpaul.com'
 FONT = __import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)), '..', 'fab', 'fonts', 'BarlowCondensed-SemiBold.ttf')   # same face as 'By Ethical Paul'
 S = 200.0                      # px per mm
-BASE_Y = 69.20                 # second line of the left stack
-CAP = 1.20                     # font size set by capital height (credit is 1.40)
+BASE_Y = 68.35                 # second line of the left stack
+CAP = 1.47                     # font size set by capital height (credit is 1.75)
 X0 = 9.208                     # left edge of 'By Ethical Paul'
 
 font = ImageFont.truetype(FONT, 100)
