@@ -42,6 +42,8 @@ REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
   RCA jack outline. Nothing moved onto pads; copper and drills unchanged.
 - Subtitle now names all three boards: "CHEAP SQUEAK DELUXE · SOUNDS GOOD ·
   TURBO CHEAP SQUEAK" (was "... · BENCH TESTER").
+- "By Ethical Paul · paul@ethicalpaul.com": contact address added beside the
+  credit line, same height and baseline.
 - Three small ground-pour keep-outs on the back (around 29.8,51.8 / 32.3,47.4 /
   30.9,30.1 in Gerber coordinates) stop the rerouted tracks from leaving an
   unconnected pour island and two thin necks.
