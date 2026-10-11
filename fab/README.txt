@@ -27,10 +27,10 @@ REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
 - E.6 turns the footprint's pin numbers 180 degrees: with the 0 at the top,
   pin 1 is the top-left hole and drives SOUND0. Hole positions are unchanged;
   the four sound tracks are swapped where they meet the resistors:
-    SW1 top-left hole     -> S0 (RS0/RPD0)   front copper
-    SW1 bottom-right hole -> S1 (RS1/RPD1)   back copper
-    SW1 bottom-left hole  -> S2 (RS2/RPD2)   front copper
-    SW1 top-right hole    -> S3 (RS3/RPD3)   back copper
+    SW1 top-left hole     -> S0 (R5/R6)   front copper
+    SW1 bottom-right hole -> S1 (R3/R4)   back copper
+    SW1 bottom-left hole  -> S2 (R9/R10)   front copper
+    SW1 top-right hole    -> S3 (R7/R8)   back copper
 - Silkscreen: a "0" replaces the top dial tick and an "8" the bottom one, so
   the switch's printed 0 lines up with the silk 0. REV E.5 -> REV E.6.
 - Silkscreen text: every label is now at least 1.1 mm tall (capital height)
@@ -51,6 +51,10 @@ REV E.6: HEX DIAL FITS WITH ITS 0 AT THE TOP.
 - Schematic unchanged electrically (dial 1-2-4-8 -> SOUND0-3); the KiCad
   symbol now lists SW1's pins in footprint order (1, CL, 4, 8, CR, 2).
 - E.5 BOARDS: fit SW1 with its 0 toward the BOTTOM edge to get the right bits.
+- Resistor references renumbered to the usual R1-R13 (silkscreen unchanged;
+  it prints values, not references). Old -> new: RSIRQ R1, RIRQ R2, RS1 R3,
+  RPD1 R4, RS0 R5, RPD0 R6, RS3 R7, RPD3 R8, RS2 R9, RPD2 R10, RL1 R11,
+  RL2 R12, RRST R13. The notes below use the new names.
 Every other hole, part, net and label is unchanged from E.5.
 
 REV E.5: POWER PROTECTION AND INDICATORS (review feedback).
@@ -88,12 +92,12 @@ REV E.1 CHANGES (from Rev E / Rev D5)
 1. RESET POLARITY FIXED. J2-9/10 is active-LOW on all three boards (e.g. CSD:
    100k pull-up -> 40106 -> 74LS04 -> diodes pull the 68000 RST/HALT low). Rev D5
    held RESET low through 10k, which would keep the board in reset permanently.
-   Now: RRST (10k) pulls RESET up to +5V; the RESET button pulls it to GND.
+   Now: R13 (10k) pulls RESET up to +5V; the RESET button pulls it to GND.
 2. SIRQ polarity hardwired "fire low"; JP1 removed. All three boards idle SIRQ
    high (100k on-board pull-up) and the same game hardware drives them with the
    same signal (Spy Hunter II feeds a Sounds Good and a TCS from the same control
-   bits). RIRQ (10k) pulls SIRQ up to +5V; PLAY pulls it to GND.
-3. PLAY debounce: C1 1 uF across the button (~10 ms with RIRQ).
+   bits). R2 (10k) pulls SIRQ up to +5V; PLAY pulls it to GND.
+3. PLAY debounce: C1 1 uF across the button (~10 ms with R2).
 4. E-GND (J2-7) tied to GND. Sounds Good grounds it on-board; CSD/TCS use it as
    the return for their input filter capacitors.
 Harness hole sizes, pin order, duplicate pins and all silk names are unchanged.
