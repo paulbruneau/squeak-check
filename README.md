@@ -18,6 +18,7 @@ By Ethical Paul.
 | `fab/BOM.csv` | Bill of materials with Mouser part numbers |
 | `fab/Harness_Pin_Map.csv` | Every harness hole: connector, pin, label, net, position |
 | `fab/README.txt` | Revision history and verification notes |
+| `reference/Cheap_Squeak_Deluxe_Schematic.pdf` | Midway's Cheap Squeak Deluxe schematic (A080-91671), for reference |
 | `tools/` | Scripts used to edit and check the Gerbers (see `tools/README.md`) |
 | `fab/fonts/` | Barlow Condensed SemiBold, the silkscreen credit font (SIL OFL) |
 | `index.html`, `images/` | The website |
