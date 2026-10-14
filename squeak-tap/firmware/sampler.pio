@@ -1,0 +1,37 @@
+; Squeak Tap - samples the Cheap Squeak Deluxe DAC bus at a fixed rate.
+;
+; in_base = GP2. Eleven pins are read every sample (Squeak Tap Rev A wiring):
+;   bits 0-4  = DAC D5..D9 (GP2..GP6)
+;   bits 5-9  = DAC D0..D4 (GP7..GP11)   (D0 = LSB = PIA PB6, D9 = MSB = PIA PA7)
+;   bit  10   = MARK button, active low (GP12)
+; The firmware rotates bits 0-9 back into D0..D9 order before sending.
+;
+; The loop is exactly 5 PIO cycles. With sys_clk = 120 MHz and clkdiv = 25
+; the PIO runs at 4.8 MHz, giving 960,000 samples per second.
+; "push" blocks when the RX FIFO is full; firmware checks FDEBUG.RXSTALL to
+; detect (and report) any lost timing.
+
+.program sampler
+.wrap_target
+    in pins, 11   [2]   ; 3 cycles: ISR = pins (ISR is empty after each push)
+    push block    [1]   ; 2 cycles
+.wrap
+
+% c-sdk {
+static inline void sampler_program_init(PIO pio, uint sm, uint offset,
+                                        uint pin_base, uint pin_count,
+                                        float clkdiv) {
+    for (uint i = 0; i < pin_count; i++) {
+        pio_gpio_init(pio, pin_base + i);   // also clears pad isolation on RP2350
+    }
+    pio_sm_set_consecutive_pindirs(pio, sm, pin_base, pin_count, false);
+
+    pio_sm_config c = sampler_program_get_default_config(offset);
+    sm_config_set_in_pins(&c, pin_base);
+    // Shift left, no autopush: after "in pins, 11" the sample sits in bits 0-10.
+    sm_config_set_in_shift(&c, false, false, 32);
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
+    sm_config_set_clkdiv(&c, clkdiv);
+    pio_sm_init(pio, sm, offset, &c);
+}
+%}

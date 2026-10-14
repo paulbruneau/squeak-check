@@ -20,6 +20,7 @@ By Ethical Paul.
 | `fab/README.txt` | Revision history and verification notes |
 | `reference/Cheap_Squeak_Deluxe_Schematic.pdf` | Midway's Cheap Squeak Deluxe schematic (A080-91671), for reference |
 | `tools/` | Scripts used to edit and check the Gerbers (see `tools/README.md`) |
+| `squeak-tap/` | **Squeak Tap**, a companion project: plugs into the CSD's DAC socket and records the sound board's audio as the exact digital values, straight to WAV (see `squeak-tap/README.md`) |
 | `fab/fonts/` | Barlow Condensed SemiBold, the silkscreen credit font (SIL OFL) |
 | `index.html`, `images/` | The website |
 
@@ -30,6 +31,12 @@ Fit the hex dial (SW1) with the 0 on its dial toward the top of the board, next 
 ## Ordering boards
 
 Upload the Gerber zip to any 2-layer PCB fab: FR-4, 1.6 mm, 1 oz copper, any mask colour, white silk, HASL or ENIG.
+
+## Squeak Tap
+
+`squeak-tap/` holds a second, separate project: a DAC-socket adapter and a Raspberry Pi Pico capture board, ordered together on one panel and snapped apart. It records the 10-bit values the Cheap Squeak Deluxe writes to its AD7533 DAC and turns them into WAV files, for a bit-exact copy of a sound such as the Spy Hunter theme. Gerbers, schematic, BOM, firmware and the PC tool are all in that folder. Rev A has not been built yet.
+
+![Squeak Tap Rev A panel](squeak-tap/hardware/images/board-top.png)
 
 ## Rights
 

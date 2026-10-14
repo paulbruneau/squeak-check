@@ -1,0 +1,18 @@
+Ref,Qty,Description,Manufacturer,Mfr Part #,Mouser #,Notes
+--- BOARD 1: DAC ADAPTER ---,,,,,,
+X1,1,"16-pin machined DIP socket, 0.300"" rows",Mill-Max,110-43-316-41-001000,,Top side. The original AD7533 moves here; notch toward the silk notch
+P1,2,"1x8 machined male pin strip, 0.025"" PCB end, 0.018"" plug end",Mill-Max,350-10-108-00-006000,,"Bottom side, solder from the top. The thin ends plug into the CSD U10 socket. Or cut 8-pin lengths from 350-10-164-00-001000"
+J2,1,"2x8 shrouded box header, 2.54 mm, vertical",Wurth Elektronik,61201621621,,Key slot toward the silk notch (the DIP side)
+--- BOARD 2: CAPTURE BOARD ---,,,,,,
+J1,1,"2x8 shrouded box header, 2.54 mm, vertical",Wurth Elektronik,61201621621,,Key slot toward the silk notch (the RN1 side)
+RN1,1,"100 k x10 bussed resistor network, SIP-11",Bourns,4611X-101-104LF,,"Pin 1 (common, dot) toward the top of the board"
+"U1, U2",2,"Octal bus transceiver, 3.3 V, 5 V tolerant inputs, PDIP-20",Texas Instruments,SN74LVC245AN,595-SN74LVC245AN,
+"(U1, U2)",2,"20-pin DIP socket, 0.300"" (optional)",any,,,
+"C1, C2",2,"100 nF X7R ceramic, 2.54 mm leads",KEMET,C320C104K5R5TA,,
+A1,1,Raspberry Pi Pico 2 (original Pico also works),Raspberry Pi,SC1631,,Mount on headers so C1/C2 fit underneath. Pico 2 H comes with headers
+(A1),2,"1x20 female header, 2.54 mm (Pico socket)",any,,,Plus 2x 1x20 male header if the Pico has none
+SW1,1,6x6 mm THT tactile switch (MARK),Omron,B3F-1000,653-B3F-1000,Same switch as Squeak Check
+"H1, H2",2,M3 standoff or rubber foot (optional),any,,,
+--- CABLE ---,,,,,,
+,2,"16-way IDC socket, 2.54 mm, with strain relief",any,,,Crimp both the same way round: pin 1 to pin 1
+,1,"16-way 1.27 mm flat ribbon, about 15 cm",any,,,Or one ready-made 16-pin IDC cable

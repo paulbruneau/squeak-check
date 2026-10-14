@@ -1,0 +1,17 @@
+Ribbon pin,Signal,CSD source,Capture board input,Pico GPIO
+1,D6,"U10 pin 7 (BIT4, PIA PA4)",U1 pin 3,GP3
+2,D5,"U10 pin 8 (BIT5, PIA PA3)",U1 pin 2,GP2
+3,D7,"U10 pin 6 (BIT3, PIA PA5)",U1 pin 4,GP4
+4,GND,U10 pin 3,GND,
+5,D8,"U10 pin 5 (BIT2, PIA PA6)",U1 pin 5,GP5
+6,GND,U10 pin 3,GND,
+7,D9,"U10 pin 4 (BIT1, PIA PA7)",U1 pin 6,GP6
+8,GND,U10 pin 3,GND,
+9,D0,"U10 pin 13 (BIT10, PIA PB6)",U1 pin 7,GP7
+10,GND,U10 pin 3,GND,
+11,D1,"U10 pin 12 (BIT9, PIA PB7)",U1 pin 8,GP8
+12,GND,U10 pin 3,GND,
+13,D2,"U10 pin 11 (BIT8, PIA PA0)",U1 pin 9,GP9
+14,GND,U10 pin 3,GND,
+15,D3,"U10 pin 10 (BIT7, PIA PA1)",U2 pin 2,GP10
+16,D4,"U10 pin 9 (BIT6, PIA PA2)",U2 pin 3,GP11
