@@ -117,6 +117,7 @@ footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); 
     <li><a href="#using">Using it</a></li>
     <li><a href="#build">Build it</a></li>
     <li><a href="#compat">Compatibility</a></li>
+    <li><a href="#tap">Squeak Tap</a></li>
     <li><a href="#sources">Sources</a></li>
   </ul>
 </nav>
@@ -320,6 +321,42 @@ footer .pix { font: 10px/1.8 "Press Start 2P", monospace; color: var(--accent); 
     </tbody>
   </table></div>
   <p>Not compatible: the Super Sound I/O (SSIO), and the Williams System 11 sound boards in Arch Rivals, Pigskin 621AD and Tri-Sports. The pinball-era Bally boards (Cheap Squeak, Sounds Deluxe, pinball TCS) use different harnesses and weren't checked.</p>
+</section>
+
+<section id="tap">
+  <h2>Squeak Tap: record the sound digitally</h2>
+  <p>Squeak Tap is a companion project. It plugs into the Cheap Squeak Deluxe's DAC socket and records the exact 10-bit numbers the 68000 sends to the DAC, so you get a bit-perfect digital copy of a sound, such as the Spy Hunter theme, instead of a recording of the analog output.</p>
+  <figure class="board">
+    <img src="squeak-tap/hardware/images/board-top.png" width="2184" height="1440" loading="lazy" alt="Squeak Tap Rev A panel, top side: the DAC adapter on the left with its plug, DAC socket and ribbon header, the capture board on the right with the ribbon header, two 74LVC245 buffers, a Raspberry Pi Pico 2 footprint and the MARK button, joined by three mouse-bite tabs">
+    <figcaption>Rev A panel, rendered from the fab files: the DAC adapter (left, 34 &times; 37 mm) and the capture board (right, 55 &times; 60 mm), ordered as one 91 &times; 60 mm board and snapped apart at the three tabs.</figcaption>
+  </figure>
+  <ul>
+    <li><b>DAC adapter:</b> lift the AD7533 out of U10 and plug the adapter in. The DAC goes into a socket on the adapter, 12.7 mm to one side, and still drives the board's audio. The 10 data bits and ground go out on a 16-way ribbon. It draws no power from the sound board.</li>
+    <li><b>Capture board:</b> two 74LVC245 buffers turn the 5 V logic into 3.3 V, and a Raspberry Pi Pico 2 samples all 10 bits 960,000 times a second. It sends only the changes to a PC over USB. With the Pico unplugged, the buffers don't load the sound board.</li>
+    <li><b>PC tool:</b> <code>squeak_tap.py</code> saves the stream and turns it into a WAV: at the CSD's own update rate (one sample per DAC write, lossless), at 44.1 or 48 kHz, or with the CSD's analog filter added so it sounds like the cabinet.</li>
+  </ul>
+  <h3>Why 960 kHz?</h3>
+  <p>The sound board has no sample clock to tap: the 68000 writes a new value whenever its code gets there, and each value takes two writes, the top 8 bits from PIA port A and the bottom 2 from port B. Watching the bus every microsecond catches the exact moment of each write. That gives the true update rate for the lossless copy, and lets the tool remove the half-written value between the two writes, which would otherwise be a click. Only changes are sent, so the USB traffic follows the board's write rate, not 960,000 a second.</p>
+  <h3>Recording the Spy Hunter theme</h3>
+  <ol>
+    <li>Flash the Pico with the <code>.uf2</code> file, fit the adapter in U10 and the AD7533 in the adapter, and connect the ribbon.</li>
+    <li>Run <code>python squeak_tap.py capture &lt;port&gt; spyhunter.sqt</code> on the PC.</li>
+    <li>With Squeak Check driving the sound board, dial 1, press MARK on the capture board, then press PLAY. Press Ctrl-C when the theme ends.</li>
+    <li>Run <code>python squeak_tap.py wav spyhunter.sqt theme.wav --rate native --from-mark 1</code> for the lossless copy, or leave out <code>--rate native</code> for 48 kHz.</li>
+  </ol>
+  <div class="callout"><b>Rev A hasn't been built yet.</b> The boards pass the same design-rule and netlist checks as Squeak Check, and the PC tool was tested on a simulated capture, but nothing has been fitted to a real sound board. Check that the adapter clears C122, LED1 and the PIA on your board before ordering. Plug it in with pin 1 matching U10 pin 1: fitted backwards, it would put +12 V on a data line.</div>
+  <p>To order, upload the Gerber zip as one panel. On JLCPCB set <i>Different Design</i> to 2 and <i>Delivery Format</i> to <i>Panel by Customer</i>; other fabs have the same options under other names. The tabs follow JLCPCB's mouse-bite guide.</p>
+  <div class="dl">
+    <a href="squeak-tap/hardware/out/SqueakTap_RevA_Gerbers.zip" download><b>Gerbers + drill files</b><span>Two-board panel, ready to upload</span></a>
+    <a href="squeak-tap/hardware/out/Schematic_RevA.pdf"><b>Schematic</b><span>PDF, drawn from the board netlist</span></a>
+    <a href="squeak-tap/hardware/out/BOM.csv"><b>Bill of materials</b><span>CSV, all through-hole</span></a>
+    <a href="squeak-tap/hardware/out/Ribbon_Pin_Map.csv"><b>Ribbon pin map</b><span>Each pin from the DAC to the Pico</span></a>
+    <a href="squeak-tap/firmware/uf2/squeak_tap_pico2.uf2" download><b>Firmware, Pico 2</b><span>.uf2, drag onto the Pico</span></a>
+    <a href="squeak-tap/firmware/uf2/squeak_tap_pico.uf2" download><b>Firmware, Pico</b><span>.uf2 for the original Pico</span></a>
+    <a href="squeak-tap/host/squeak_tap.py" download><b>PC tool</b><span>Python: capture and make WAVs</span></a>
+    <a href="https://github.com/paulbruneau/squeak-check/tree/main/squeak-tap"><b>All files</b><span>Source, build notes, KiCad</span></a>
+  </div>
+  <p class="note">The DAC wiring comes from Midway's schematic, kept in this repo as <a href="reference/Cheap_Squeak_Deluxe_Schematic.pdf">reference/Cheap_Squeak_Deluxe_Schematic.pdf</a>.</p>
 </section>
 
 <section id="sources">
